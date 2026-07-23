@@ -14,15 +14,18 @@ export default function Navigation() {
         <h1 style={{ margin: 0, fontSize: '1.8rem' }}>Base HQ</h1>
       </Link>
       
-      <div style={{ display: 'flex', gap: '1.5rem' }}>
-        <Link to="/" className="brutal-btn speed-streak-hover" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-          <Home size={20} /> Burrow
+      <div style={{ display: 'flex', gap: '1rem' }}>
+        <Link to="/home" className="brutal-btn speed-streak-hover" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.5rem 1rem' }}>
+          <Home size={20} /> Home
         </Link>
-        <Link to="/dashboard" className="brutal-btn blue speed-streak-hover" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+        <Link to="/dashboard" className="brutal-btn speed-streak-hover" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.5rem 1rem' }}>
           <LayoutDashboard size={20} /> Dashboard
         </Link>
-        <Link to="/hall-of-fame" className="brutal-btn speed-streak-hover" style={{ backgroundColor: 'var(--bg-white)', color: 'var(--text-dark)', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-          <Trophy size={20} /> Elite
+        <Link to="/hall-of-fame" className="brutal-btn speed-streak-hover" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.5rem 1rem' }}>
+          <Trophy size={20} /> Hall of Fame
+        </Link>
+        <Link to="/admin-den" className="brutal-btn speed-streak-hover" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.5rem 1rem', backgroundColor: 'var(--text-dark)', color: 'var(--bg-white)' }}>
+          Admin
         </Link>
       </div>
     </nav>

@@ -7,6 +7,7 @@ import Home from './pages/Home';
 import Dashboard from './components/Dashboard';
 import HallOfFame from './components/HallOfFame';
 import Onboarding from './components/Onboarding';
+import AdminDen from './pages/AdminDen';
 import './index.css';
 
 function App() {
@@ -37,6 +38,7 @@ function App() {
             <Route path="/home" element={session ? <Home /> : <Navigate to="/" />} />
             <Route path="/dashboard" element={session ? <Dashboard /> : <Navigate to="/" />} />
             <Route path="/hall-of-fame" element={session ? <HallOfFame /> : <Navigate to="/" />} />
+            <Route path="/admin-den" element={session ? <AdminDen /> : <Navigate to="/" />} />
           </Routes>
         </main>
       </div>
