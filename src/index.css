@@ -1,0 +1,131 @@
+:root {
+  --primary-orange: #ff5c00;
+  --primary-blue: #004dff;
+  --bg-white: #ffffff;
+  --text-dark: #111111;
+  --border-thick: 4px solid var(--text-dark);
+  --shadow-brutal: 6px 6px 0px 0px var(--text-dark);
+  --shadow-brutal-hover: 2px 2px 0px 0px var(--text-dark);
+  
+  font-family: 'Space Grotesk', system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+  
+  color-scheme: light;
+  color: var(--text-dark);
+  background-color: var(--bg-white);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background-color: #f4f4f4;
+  background-image: radial-gradient(var(--text-dark) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+/* Typography */
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: -0.05em;
+  margin-bottom: 1rem;
+}
+
+/* Neo-brutalist Utilities */
+.brutal-box {
+  background-color: var(--bg-white);
+  border: var(--border-thick);
+  box-shadow: var(--shadow-brutal);
+  transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
+  padding: 1.5rem;
+}
+
+.brutal-box:hover {
+  transform: translate(4px, 4px);
+  box-shadow: var(--shadow-brutal-hover);
+}
+
+.brutal-btn {
+  background-color: var(--primary-orange);
+  color: var(--bg-white);
+  border: var(--border-thick);
+  box-shadow: var(--shadow-brutal);
+  padding: 0.75rem 1.5rem;
+  font-weight: 800;
+  font-size: 1.1rem;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  position: relative;
+  overflow: hidden;
+}
+
+.brutal-btn:hover {
+  transform: translate(4px, 4px);
+  box-shadow: var(--shadow-brutal-hover);
+}
+
+.brutal-btn.blue {
+  background-color: var(--primary-blue);
+}
+
+/* Speed Streak Micro-animation */
+@keyframes speedStreak {
+  0% { transform: translateX(-100%) skewX(-15deg); }
+  100% { transform: translateX(200%) skewX(-15deg); }
+}
+
+.speed-streak-hover::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 30%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.4);
+  transform: translateX(-100%) skewX(-15deg);
+  transition: none;
+}
+
+.speed-streak-hover:hover::after {
+  animation: speedStreak 0.5s ease-out forwards;
+}
+
+/* Layout */
+.app-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+/* Dashboard Flame effect */
+@keyframes flicker {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.8; transform: scale(1.1); }
+}
+.flaming-carrot {
+  animation: flicker 1.5s infinite alternate;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 12px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-white);
+  border-left: var(--border-thick);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--primary-orange);
+  border: 2px solid var(--text-dark);
+}
