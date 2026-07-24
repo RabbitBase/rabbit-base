@@ -5,7 +5,7 @@ export default function Auth() {
   const handleGitHubLogin = async () => {
     await supabase.auth.signInWithOAuth({
       provider: 'github',
-      options: { redirectTo: window.location.origin }
+      options: { redirectTo: `${window.location.origin}/` }
     });
   };
 

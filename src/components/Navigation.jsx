@@ -1,8 +1,16 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
-import { Rabbit, Home, LayoutDashboard, Trophy } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
+import { Rabbit, Home, LayoutDashboard, Trophy, LogOut } from 'lucide-react';
+import { supabase } from '../utils/supabase';
 
 export default function Navigation() {
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    navigate('/');
+  };
+
   return (
     <nav className="brutal-box" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem', padding: '1rem 2rem' }}>
       <Link to="/" style={{ textDecoration: 'none', color: 'inherit', display: 'flex', alignItems: 'center', gap: '1rem' }}>
@@ -27,6 +35,9 @@ export default function Navigation() {
         <Link to="/admin-den" className="brutal-btn speed-streak-hover" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.5rem 1rem', backgroundColor: 'var(--text-dark)', color: 'var(--bg-white)' }}>
           Admin
         </Link>
+        <button onClick={handleLogout} className="brutal-btn speed-streak-hover" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.5rem 1rem', backgroundColor: 'var(--primary-orange)', color: 'var(--text-dark)', cursor: 'pointer' }}>
+          <LogOut size={20} /> Logout
+        </button>
       </div>
     </nav>
   );
