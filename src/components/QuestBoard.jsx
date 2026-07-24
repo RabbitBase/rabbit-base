@@ -14,11 +14,12 @@ export default function QuestBoard() {
 
   useEffect(() => {
     async function fetchQuests() {
-      // Fetching both 'active' and 'open' to accommodate potential schema variations
+      // Fetching 'active', 'open', and 'in_progress'
       const { data } = await supabase
         .from('quests')
-        .select('*')
-        .in('status', ['active', 'open']);
+        .select('*, assignee:assignee_id(username, avatar_url)')
+        .in('status', ['active', 'open', 'in_progress'])
+        .order('id', { ascending: false });
       if (data) {
         setQuests(data);
       }
@@ -59,6 +60,36 @@ export default function QuestBoard() {
     }
   };
 
+  const handleClaimQuest = async (questId) => {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) {
+      alert("You must be logged in to claim a quest!");
+      return;
+    }
+
+    const { error } = await supabase
+      .from('quests')
+      .update({ 
+        assignee_id: session.user.id,
+        status: 'in_progress',
+        claimed_at: new Date().toISOString()
+      })
+      .eq('id', questId);
+
+    if (error) {
+      console.error(error);
+      alert("Failed to claim quest! " + error.message);
+    } else {
+      // Re-fetch quests to reflect the new state
+      const { data } = await supabase
+        .from('quests')
+        .select('*, assignee:assignee_id(username, avatar_url)')
+        .in('status', ['active', 'open', 'in_progress'])
+        .order('id', { ascending: false });
+      if (data) setQuests(data);
+    }
+  };
+
   if (loading) return <div>Loading Quests...</div>;
 
   return (
@@ -83,9 +114,8 @@ export default function QuestBoard() {
             {quests.map((quest) => (
               <QuestItem 
                 key={quest.id}
-                title={quest.title} 
-                exp={quest.exp_reward} 
-                type="Quest"
+                quest={quest}
+                onClaim={handleClaimQuest}
               />
             ))}
             <button className="brutal-btn blue speed-streak-hover" style={{ marginTop: '1rem' }}>View All Quests</button>

@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { supabase } from '../utils/supabase';
 
 export default function AdminDen() {
+  const navigate = useNavigate();
   const [isAdmin, setIsAdmin] = useState(false);
   const [loading, setLoading] = useState(true);
 
@@ -28,12 +30,16 @@ export default function AdminDen() {
         if (data?.is_admin) {
           setIsAdmin(true);
           fetchPendingQuests();
+        } else {
+          navigate('/dashboard'); // Strict route guard redirect
         }
+      } else {
+        navigate('/'); // Not logged in
       }
       setLoading(false);
     }
     checkAdminAndFetch();
-  }, []);
+  }, [navigate]);
 
   const fetchPendingQuests = async () => {
     const { data } = await supabase
@@ -86,7 +92,7 @@ export default function AdminDen() {
   };
 
   if (loading) return <div>Checking authorization...</div>;
-  if (!isAdmin) return <div className="brutal-box"><h2>Access Denied</h2><p>You must be an admin to enter the den.</p></div>;
+  if (!isAdmin) return null; // Redirecting, so don't render anything
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
