@@ -13,8 +13,11 @@ export default function AdminDen() {
   const [questDesc, setQuestDesc] = useState('');
   const [questExp, setQuestExp] = useState(10);
 
+  const [pendingQuests, setPendingQuests] = useState([]);
+  const [approvalExp, setApprovalExp] = useState({});
+
   useEffect(() => {
-    async function checkAdmin() {
+    async function checkAdminAndFetch() {
       const { data: { session } } = await supabase.auth.getSession();
       if (session) {
         const { data } = await supabase
@@ -24,12 +27,23 @@ export default function AdminDen() {
           .single();
         if (data?.is_admin) {
           setIsAdmin(true);
+          fetchPendingQuests();
         }
       }
       setLoading(false);
     }
-    checkAdmin();
+    checkAdminAndFetch();
   }, []);
+
+  const fetchPendingQuests = async () => {
+    const { data } = await supabase
+      .from('quests')
+      .select('*')
+      .eq('status', 'pending');
+    if (data) {
+      setPendingQuests(data);
+    }
+  };
 
   const handleAddProject = async (e) => {
     e.preventDefault();
@@ -46,12 +60,28 @@ export default function AdminDen() {
   const handleAddQuest = async (e) => {
     e.preventDefault();
     const { error } = await supabase.from('quests').insert([
-      { title: questTitle, description: questDesc, exp_reward: parseInt(questExp) }
+      { title: questTitle, description: questDesc, status: 'open', exp_reward: parseInt(questExp) }
     ]);
     if (error) alert("Error adding quest: " + error.message);
     else {
       alert("Quest added!");
       setQuestTitle(''); setQuestDesc(''); setQuestExp(10);
+      fetchPendingQuests();
+    }
+  };
+
+  const handleApproveQuest = async (questId) => {
+    const exp = approvalExp[questId] || 0;
+    const { error } = await supabase
+      .from('quests')
+      .update({ status: 'open', exp_reward: parseInt(exp) })
+      .eq('id', questId);
+      
+    if (error) {
+      alert("Error approving quest: " + error.message);
+    } else {
+      alert("Quest approved and opened!");
+      fetchPendingQuests();
     }
   };
 
@@ -62,6 +92,41 @@ export default function AdminDen() {
     <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
       <h2>Admin Den</h2>
       
+      {/* Pending Quests Queue */}
+      <div className="brutal-box" style={{ backgroundColor: '#e6f2ff' }}>
+        <h3 style={{ borderBottom: 'var(--border-thick)', paddingBottom: '0.5rem' }}>Pending Quest Suggestions</h3>
+        {pendingQuests.length === 0 ? (
+          <p style={{ marginTop: '1rem', fontWeight: 'bold' }}>No pending quests right now. The colony is quiet!</p>
+        ) : (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginTop: '1rem' }}>
+            {pendingQuests.map(quest => (
+              <div key={quest.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem', padding: '1rem', backgroundColor: 'var(--bg-white)', border: 'var(--border-thick)' }}>
+                <div style={{ flex: 1 }}>
+                  <h4 style={{ margin: '0 0 0.5rem 0', color: 'var(--primary-blue)' }}>{quest.title}</h4>
+                  <p style={{ margin: 0 }}>{quest.description}</p>
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                  <input 
+                    type="number" 
+                    placeholder="EXP"
+                    value={approvalExp[quest.id] || ''}
+                    onChange={(e) => setApprovalExp({...approvalExp, [quest.id]: e.target.value})}
+                    style={{ width: '80px', padding: '0.5rem', border: 'var(--border-thick)', fontSize: '1rem', fontWeight: 'bold' }}
+                  />
+                  <button 
+                    onClick={() => handleApproveQuest(quest.id)}
+                    className="brutal-btn speed-streak-hover" 
+                    style={{ backgroundColor: 'var(--primary-orange)', padding: '0.5rem 1rem' }}
+                  >
+                    Approve Quest
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '2rem' }}>
         
         {/* Add Project Form */}
@@ -98,7 +163,7 @@ export default function AdminDen() {
 
         {/* Add Quest Form */}
         <div className="brutal-box" style={{ backgroundColor: '#fff8eb' }}>
-          <h3 style={{ borderBottom: 'var(--border-thick)', paddingBottom: '0.5rem' }}>Post New Quest</h3>
+          <h3 style={{ borderBottom: 'var(--border-thick)', paddingBottom: '0.5rem' }}>Post New Quest directly</h3>
           <form onSubmit={handleAddQuest} style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginTop: '1rem' }}>
             <input 
               type="text" 
