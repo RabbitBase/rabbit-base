@@ -129,3 +129,66 @@ h1, h2, h3, h4, h5, h6 {
   background: var(--primary-orange);
   border: 2px solid var(--text-dark);
 }
+
+/* Mobile Responsive Adjustments */
+@media (max-width: 768px) {
+  .desktop-nav {
+    display: none !important;
+  }
+  .mobile-nav {
+    display: flex !important;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: var(--bg-white);
+    border-top: var(--border-thick);
+    z-index: 1000;
+    justify-content: space-around;
+    align-items: center;
+    padding: 0.5rem 0;
+    box-shadow: 0px -4px 0px 0px var(--text-dark);
+  }
+  .app-container {
+    padding: 1rem;
+    padding-bottom: 80px; /* Space for bottom nav */
+  }
+
+  /* Scale down brutalist effects to prevent horizontal overflow */
+  :root {
+    --border-thick: 3px solid var(--text-dark);
+    --shadow-brutal: 4px 4px 0px 0px var(--text-dark);
+    --shadow-brutal-hover: 1px 1px 0px 0px var(--text-dark);
+  }
+  
+  .brutal-box {
+    padding: 1rem;
+  }
+
+  /* Typography Scaling */
+  h1 { font-size: 2.2rem !important; }
+  h2 { font-size: 1.8rem !important; }
+  h3 { font-size: 1.4rem !important; }
+  
+  /* Touch Targets spacing */
+  .brutal-btn, .touch-target {
+    padding: 0.8rem 1.2rem;
+    font-size: 1rem;
+    min-height: 44px;
+    min-width: 44px;
+  }
+  
+  /* Mobile Modals */
+  .mobile-modal {
+    width: 95vw !important;
+    height: 95vh !important;
+    max-width: 95vw !important;
+    max-height: 95vh !important;
+  }
+}
+
+@media (min-width: 769px) {
+  .mobile-nav {
+    display: none !important;
+  }
+}

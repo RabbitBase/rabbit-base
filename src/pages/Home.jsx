@@ -6,7 +6,7 @@ import QuestBoard from '../components/QuestBoard';
 export default function Home() {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '3rem' }}>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))', gap: '2rem' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 350px), 1fr))', gap: '2rem' }}>
         
         {/* Left Column: Events & Repos */}
         <div style={{ gridColumn: 'span 2' }}>

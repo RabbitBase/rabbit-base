@@ -53,7 +53,7 @@ export default function Dashboard() {
       <h2 style={{ fontSize: '3rem', margin: 0, textTransform: 'uppercase' }}>Contributor Dashboard</h2>
       
       {/* Top Stats Grid */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '2rem' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 300px), 1fr))', gap: '2rem' }}>
         
         {/* Streak */}
         <div className="brutal-box">
@@ -97,7 +97,7 @@ export default function Dashboard() {
         </div>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))', gap: '2rem' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 400px), 1fr))', gap: '2rem' }}>
         
         {/* Trophy Room */}
         <div className="brutal-box" style={{ backgroundColor: '#fff8eb' }}>

@@ -146,7 +146,7 @@ export default function QuestBoard() {
           display: 'flex', justifyContent: 'center', alignItems: 'center',
           padding: '1rem'
         }}>
-          <div className="brutal-box" style={{ 
+          <div className="brutal-box mobile-modal" style={{ 
             backgroundColor: 'var(--bg-white)', 
             width: '100%', maxWidth: '600px', 
             position: 'relative',
@@ -159,10 +159,10 @@ export default function QuestBoard() {
                 position: 'absolute', top: '-15px', right: '-15px', 
                 background: 'var(--primary-orange)', border: 'var(--border-thick)', 
                 fontWeight: 'bold', cursor: 'pointer', padding: '0.5rem', 
-                width: '40px', height: '40px', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                width: '44px', height: '44px', display: 'flex', alignItems: 'center', justifyContent: 'center',
                 zIndex: 10
               }}
-              className="speed-streak-hover"
+              className="speed-streak-hover touch-target"
             >
               X
             </button>
@@ -214,7 +214,7 @@ export default function QuestBoard() {
               {(selectedQuest.status === 'open' || selectedQuest.status === 'active') ? (
                 <button 
                   onClick={() => handleClaimQuest(selectedQuest.id)}
-                  className="speed-streak-hover" 
+                  className="speed-streak-hover touch-target" 
                   style={{ 
                     width: '100%', backgroundColor: 'var(--primary-blue)', color: '#fff', 
                     padding: '1rem', border: 'var(--border-thick)', fontWeight: 'bold', 
@@ -244,11 +244,11 @@ export default function QuestBoard() {
           backgroundColor: 'rgba(0,0,0,0.8)', zIndex: 1000,
           display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '1rem'
         }}>
-          <div className="brutal-box" style={{ backgroundColor: 'var(--bg-white)', width: '100%', maxWidth: '500px', position: 'relative' }}>
+          <div className="brutal-box mobile-modal" style={{ backgroundColor: 'var(--bg-white)', width: '100%', maxWidth: '500px', position: 'relative', display: 'flex', flexDirection: 'column', maxHeight: '90vh' }}>
             <button 
               onClick={() => setIsProposeModalOpen(false)}
-              style={{ position: 'absolute', top: '-15px', right: '-15px', background: 'var(--primary-orange)', border: 'var(--border-thick)', fontWeight: 'bold', cursor: 'pointer', padding: '0.5rem', width: '40px', height: '40px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-              className="speed-streak-hover"
+              style={{ position: 'absolute', top: '-15px', right: '-15px', background: 'var(--primary-orange)', border: 'var(--border-thick)', fontWeight: 'bold', cursor: 'pointer', padding: '0.5rem', width: '44px', height: '44px', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 10 }}
+              className="speed-streak-hover touch-target"
             >
               X
             </button>
@@ -260,7 +260,7 @@ export default function QuestBoard() {
                 🥕 Quest dropped in the suggestion box!
               </div>
             ) : (
-              <form onSubmit={handleProposeQuest} style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginTop: '1rem' }}>
+              <form onSubmit={handleProposeQuest} style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginTop: '1rem', overflowY: 'auto', padding: '0.5rem' }}>
                 <p style={{ fontWeight: 'bold', margin: 0 }}>Got a great idea for the colony? Pitch it to the admins!</p>
                 <input 
                   type="text" 
@@ -304,7 +304,7 @@ export default function QuestBoard() {
                   <p style={{ color: 'red', fontWeight: 'bold', margin: 0 }}>Failed to submit quest. You must be logged in!</p>
                 )}
 
-                <button type="submit" className="brutal-btn blue speed-streak-hover" style={{ marginTop: '0.5rem' }}>
+                <button type="submit" className="brutal-btn blue speed-streak-hover touch-target" style={{ marginTop: '0.5rem' }}>
                   Pitch Quest
                 </button>
               </form>
