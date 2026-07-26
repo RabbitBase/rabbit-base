@@ -19,7 +19,7 @@ export default function QuestItem({ quest, onClick }) {
         userSelect: 'none'
       }}
     >
-      <div style={{ flex: 1, minWidth: '200px' }}>
+      <div style={{ flex: 1, minWidth: 0 }}>
         <h4 style={{ margin: 0, fontSize: '1.2rem', color: 'var(--primary-blue)' }}>
           {quest.title}
         </h4>

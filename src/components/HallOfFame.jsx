@@ -56,12 +56,12 @@ export default function HallOfFame() {
                  <img src={`https://api.dicebear.com/7.x/bottts/svg?seed=${name}`} alt="avatar" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
               </div>
               
-              <div style={{ flex: 1 }}>
-                 <h3 style={{ margin: 0, fontSize: '1.8rem', color: rank === 1 ? '#fff' : 'var(--primary-blue)' }}>{name}</h3>
+              <div style={{ flex: 1, minWidth: 0 }}>
+                 <h3 style={{ margin: 0, fontSize: '1.8rem', color: rank === 1 ? '#fff' : 'var(--primary-blue)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{name}</h3>
                  <p style={{ fontWeight: 'bold', fontSize: '1.2rem' }}>Level {level} Burrower</p>
               </div>
               
-              <div style={{ textAlign: 'right', backgroundColor: rank === 1 ? 'var(--bg-white)' : 'var(--primary-orange)', padding: '1rem', border: 'var(--border-thick)', color: 'var(--text-dark)', transform: 'skewX(-5deg)' }}>
+              <div style={{ flexShrink: 0, textAlign: 'right', backgroundColor: rank === 1 ? 'var(--bg-white)' : 'var(--primary-orange)', padding: '1rem', border: 'var(--border-thick)', color: 'var(--text-dark)', transform: 'skewX(-5deg)' }}>
                  <p style={{ fontSize: '1.5rem', fontWeight: '900', margin: 0 }}>{user.exp || 0} EXP</p>
               </div>
             </div>
