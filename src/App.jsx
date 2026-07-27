@@ -4,9 +4,9 @@ import { supabase } from './utils/supabase';
 import Navigation from './components/Navigation';
 import Landing from './pages/Landing';
 import Home from './pages/Home';
-import Dashboard from './components/Dashboard';
-import HallOfFame from './components/HallOfFame';
-import Onboarding from './components/Onboarding';
+import Explore from './pages/Explore';
+import Profile from './pages/Profile';
+import Leaderboard from './pages/Leaderboard';
 import AdminDen from './pages/AdminDen';
 import './index.css';
 
@@ -33,11 +33,11 @@ function App() {
         {session && <Navigation />}
         <main>
           <Routes>
-            <Route path="/" element={!session ? <Landing /> : <Navigate to="/onboarding" />} />
-            <Route path="/onboarding" element={session ? <Onboarding /> : <Navigate to="/" />} />
+            <Route path="/" element={!session ? <Landing /> : <Navigate to="/home" />} />
             <Route path="/home" element={session ? <Home /> : <Navigate to="/" />} />
-            <Route path="/dashboard" element={session ? <Dashboard /> : <Navigate to="/" />} />
-            <Route path="/hall-of-fame" element={session ? <HallOfFame /> : <Navigate to="/" />} />
+            <Route path="/explore" element={session ? <Explore /> : <Navigate to="/" />} />
+            <Route path="/profile" element={session ? <Profile /> : <Navigate to="/" />} />
+            <Route path="/leaderboard" element={session ? <Leaderboard /> : <Navigate to="/" />} />
             <Route path="/admin-den" element={session ? <AdminDen /> : <Navigate to="/" />} />
           </Routes>
         </main>

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { Rabbit, Home, LayoutDashboard, Trophy, LogOut, ShieldAlert, Menu, X, Flame } from 'lucide-react';
+import { Rabbit, Home, LayoutDashboard, Trophy, Menu, X, Compass } from 'lucide-react';
 import { supabase } from '../utils/supabase';
 import logo from '../assets/logo.png';
 
@@ -9,6 +9,7 @@ export default function Navigation() {
   const location = useLocation();
   const [isAdmin, setIsAdmin] = useState(false);
   const [userExp, setUserExp] = useState(0);
+  const [username, setUsername] = useState('AGENT');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   useEffect(() => {
@@ -17,22 +18,18 @@ export default function Navigation() {
       if (session) {
         const { data } = await supabase
           .from('profiles')
-          .select('is_admin, exp')
+          .select('is_admin, exp, username')
           .eq('id', session.user.id)
           .single();
         if (data) {
           setIsAdmin(data.is_admin);
           setUserExp(data.exp || 0);
+          if (data.username) setUsername(data.username);
         }
       }
     }
     checkUser();
   }, []);
-
-  const handleLogout = async () => {
-    await supabase.auth.signOut();
-    navigate('/');
-  };
 
   const isActive = (path) => location.pathname === path;
   const closeMenu = () => setIsMobileMenuOpen(false);
@@ -47,19 +44,15 @@ export default function Navigation() {
       display: 'flex', 
       alignItems: 'center',
       justifyContent: 'center', 
-      gap: '0.5rem', 
-      padding: '0 1rem', // Reduced padding to prevent horizontal cramming
-      height: NAV_HEIGHT,
+      width: '56px', // Perfect square (w-14)
+      height: '56px', // Perfect square (h-14)
       backgroundColor: active ? 'var(--primary-orange)' : 'var(--bg-white)',
       color: active ? '#fff' : 'var(--text-dark)',
       border: 'var(--border-thick)',
-      boxShadow: 'var(--shadow-brutal)',
-      fontWeight: '800',
-      fontSize: '1.1rem',
-      textTransform: 'uppercase',
+      boxShadow: '4px 4px 0px 0px rgba(0,0,0,1)', // stark shadow as requested
       textDecoration: 'none',
       cursor: 'pointer',
-      whiteSpace: 'nowrap'
+      flexShrink: 0
     };
   };
 
@@ -68,12 +61,12 @@ export default function Navigation() {
       display: 'flex', 
       justifyContent: 'space-between', 
       alignItems: 'center', 
-      marginBottom: '2rem', 
       padding: '1rem 2rem', 
+      marginBottom: '2rem',
       position: 'relative', 
       zIndex: 9999,
       width: '100%',
-      gap: '2rem' // CRITICAL: Ensure zones never collide on narrow screens
+      gap: '2rem'
     }}>
       {/* LEFT ZONE: Logo */}
       <div style={{ flex: 1, display: 'flex', justifyContent: 'flex-start', alignItems: 'center', minWidth: 0 }}>
@@ -82,70 +75,68 @@ export default function Navigation() {
             <img src={logo} alt="Base HQ" style={{ width: '100%', height: '100%', objectFit: 'cover' }} onError={(e) => { e.target.style.display = 'none'; e.target.nextSibling.style.display = 'block'; }} />
             <Rabbit size={28} color="var(--primary-orange)" style={{ display: 'none' }} />
           </div>
-          <h1 className="desktop-nav" style={{ margin: 0, fontSize: '1.8rem', whiteSpace: 'nowrap' }}>Base HQ</h1>
+          <h1 className="desktop-nav" style={{ margin: 0, fontSize: '1.8rem', whiteSpace: 'nowrap' }}>Rabbit Base</h1>
         </Link>
       </div>
       
+      {/* MOBILE CENTER: Title */}
+      <h1 className="mobile-menu-btn" style={{ 
+        position: 'absolute', 
+        left: '50%', 
+        transform: 'translateX(-50%)', 
+        margin: 0, 
+        fontSize: '1.5rem', 
+        whiteSpace: 'nowrap',
+        pointerEvents: 'none' 
+      }}>
+        Rabbit Base
+      </h1>
+      
       {/* CENTER ZONE: Core Nav Links */}
-      <div className="desktop-nav" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '1rem', flexShrink: 0 }}>
-        <Link to="/home" className="nav-btn-hover" style={getLinkStyle('/home')}>
-          <Home size={20} /> Home
+      <div className="desktop-nav" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '1.5rem', flexShrink: 0 }}>
+        <Link to="/home" className="nav-btn-hover" style={getLinkStyle('/home')} title="Home">
+          <Home size={28} />
         </Link>
-        <Link to="/dashboard" className="nav-btn-hover" style={getLinkStyle('/dashboard')}>
-          <LayoutDashboard size={20} /> Dashboard
+        <Link to="/explore" className="nav-btn-hover" style={getLinkStyle('/explore')} title="Explore">
+          <Compass size={28} />
         </Link>
-        <Link to="/hall-of-fame" className="nav-btn-hover" style={getLinkStyle('/hall-of-fame')}>
-          <Trophy size={20} /> Fame
+        <Link to="/leaderboard" className="nav-btn-hover" style={getLinkStyle('/leaderboard')} title="Leaderboard">
+          <Trophy size={28} />
         </Link>
       </div>
 
-      {/* RIGHT ZONE: Player HUD & System Actions */}
-      <div className="desktop-nav" style={{ flex: 1, display: 'flex', justifyContent: 'flex-end', alignItems: 'center', gap: '1rem', minWidth: 0 }}>
+      {/* RIGHT ZONE: Player HUD / Profile */}
+      <div className="desktop-nav" style={{ flex: 1, display: 'flex', justifyContent: 'flex-end', alignItems: 'center', minWidth: 0 }}>
         
-        {/* Stat Pill */}
-        <div style={{
+        <Link to="/profile" className="nav-btn-hover" title="Profile" style={{
           display: 'flex', 
-          flexDirection: 'row',
           alignItems: 'center',
-          justifyContent: 'center', 
           gap: '0.5rem',
-          backgroundColor: '#fff8eb', 
-          border: 'var(--border-thick)',
-          padding: '0 1rem', 
-          height: NAV_HEIGHT,
           fontWeight: '900',
-          fontSize: '1.1rem',
-          boxShadow: 'var(--shadow-brutal)', // MATCH shadow of other buttons
-          whiteSpace: 'nowrap',
-          flexShrink: 0
+          fontSize: '1.2rem',
+          color: 'var(--text-dark)',
+          textTransform: 'uppercase',
+          textDecoration: 'none',
+          backgroundColor: 'var(--bg-white)',
+          padding: '0 1rem',
+          height: '56px', // match nav icons height
+          border: 'var(--border-thick)',
+          boxShadow: '4px 4px 0px 0px rgba(0,0,0,1)',
+          cursor: 'pointer',
+          maxWidth: '300px' // Ensure entire button doesn't blow out
         }}>
-          <Flame size={20} color="var(--primary-orange)" className="flaming-carrot" />
-          <span>{userExp} EXP</span>
-        </div>
-
-        {isAdmin && (
-          <Link to="/admin-den" className="nav-btn-hover" style={{ 
-            display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', 
-            padding: '0 1rem', height: NAV_HEIGHT,
-            backgroundColor: 'var(--text-dark)', color: 'var(--bg-white)', 
-            border: 'var(--border-thick)', boxShadow: 'var(--shadow-brutal)', 
-            fontWeight: '800', fontSize: '1.1rem', textTransform: 'uppercase', textDecoration: 'none',
-            whiteSpace: 'nowrap', flexShrink: 0
+          <span style={{ 
+            maxWidth: '120px', 
+            overflow: 'hidden', 
+            whiteSpace: 'nowrap', 
+            textOverflow: 'ellipsis' 
           }}>
-            Admin
-          </Link>
-        )}
-        
-        {/* Compact Logout */}
-        <button onClick={handleLogout} className="nav-btn-hover" style={{ 
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-          width: NAV_HEIGHT, height: NAV_HEIGHT, 
-          backgroundColor: 'var(--bg-white)', color: 'var(--text-dark)', 
-          border: 'var(--border-thick)', cursor: 'pointer',
-          boxShadow: 'var(--shadow-brutal)', padding: 0, flexShrink: 0
-        }} title="Logout">
-          <LogOut size={20} />
-        </button>
+            {username}
+          </span>
+          <span style={{ flexShrink: 0, display: 'flex', alignItems: 'center' }}>
+            <span style={{ fontSize: '1.5rem', margin: '0 0.2rem' }}>🥕</span> {userExp} EXP
+          </span>
+        </Link>
       </div>
 
       {/* Hamburger Menu Button (Mobile Only) */}
@@ -165,28 +156,22 @@ export default function Navigation() {
           gap: '1rem', zIndex: 1000, backgroundColor: 'var(--bg-white)', padding: '1.5rem'
         }}>
           
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', marginBottom: '1rem', padding: '0.5rem', border: 'var(--border-thick)', backgroundColor: '#fff8eb' }}>
-             <Flame size={24} color="var(--primary-orange)" className="flaming-carrot" />
-             <span style={{ fontSize: '1.2rem', fontWeight: '900' }}>{userExp} EXP</span>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', marginBottom: '1rem', padding: '0.5rem' }}>
+             <span style={{ fontSize: '1.2rem', fontWeight: '900', textTransform: 'uppercase' }}>{username} 🥕 {userExp} EXP</span>
           </div>
 
           <Link to="/home" onClick={closeMenu} className="brutal-btn speed-streak-hover touch-target" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', backgroundColor: isActive('/home') ? 'var(--primary-blue)' : 'var(--bg-white)', color: isActive('/home') ? '#fff' : 'var(--text-dark)' }}>
             <Home size={24} /> Home
           </Link>
-          <Link to="/dashboard" onClick={closeMenu} className="brutal-btn speed-streak-hover touch-target" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', backgroundColor: isActive('/dashboard') ? 'var(--primary-blue)' : 'var(--bg-white)', color: isActive('/dashboard') ? '#fff' : 'var(--text-dark)' }}>
-            <LayoutDashboard size={24} /> Dashboard
+          <Link to="/explore" onClick={closeMenu} className="brutal-btn speed-streak-hover touch-target" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', backgroundColor: isActive('/explore') ? 'var(--primary-blue)' : 'var(--bg-white)', color: isActive('/explore') ? '#fff' : 'var(--text-dark)' }}>
+            <LayoutDashboard size={24} /> Explore
           </Link>
-          <Link to="/hall-of-fame" onClick={closeMenu} className="brutal-btn speed-streak-hover touch-target" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', backgroundColor: isActive('/hall-of-fame') ? 'var(--primary-blue)' : 'var(--bg-white)', color: isActive('/hall-of-fame') ? '#fff' : 'var(--text-dark)' }}>
-            <Trophy size={24} /> Hall of Fame
+          <Link to="/leaderboard" onClick={closeMenu} className="brutal-btn speed-streak-hover touch-target" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', backgroundColor: isActive('/leaderboard') ? 'var(--primary-blue)' : 'var(--bg-white)', color: isActive('/leaderboard') ? '#fff' : 'var(--text-dark)' }}>
+            <Trophy size={24} /> Leaderboard
           </Link>
-          {isAdmin && (
-            <Link to="/admin-den" onClick={closeMenu} className="brutal-btn speed-streak-hover touch-target" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', backgroundColor: 'var(--text-dark)', color: 'var(--bg-white)' }}>
-              <ShieldAlert size={24} /> Admin
-            </Link>
-          )}
-          <button onClick={() => { closeMenu(); handleLogout(); }} className="brutal-btn speed-streak-hover touch-target" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', backgroundColor: '#ff0055', color: '#fff', cursor: 'pointer' }}>
-            <LogOut size={24} /> Logout
-          </button>
+          <Link to="/profile" onClick={closeMenu} className="brutal-btn speed-streak-hover touch-target" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', backgroundColor: isActive('/profile') ? 'var(--primary-blue)' : 'var(--bg-white)', color: isActive('/profile') ? '#fff' : 'var(--text-dark)' }}>
+             Profile
+          </Link>
         </div>
       )}
     </nav>
