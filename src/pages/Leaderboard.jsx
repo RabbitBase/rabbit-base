@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Trophy } from 'lucide-react';
 import { supabase } from '../utils/supabase';
 
-export default function HallOfFame() {
-  const [eliteUsers, setEliteUsers] = useState([]);
+export default function Leaderboard() {
+  const [leaderboard, setLeaderboard] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -15,7 +15,7 @@ export default function HallOfFame() {
         .limit(10);
       
       if (data) {
-        setEliteUsers(data);
+        setLeaderboard(data);
       }
       setLoading(false);
     }
@@ -29,7 +29,7 @@ export default function HallOfFame() {
       <h2 style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}><Trophy size={40} color="var(--primary-orange)" /> Elite Burrowers</h2>
       
       <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-        {eliteUsers.map((user, index) => {
+        {leaderboard.map((user, index) => {
           const rank = index + 1;
           const name = user.username || 'Unknown Burrower';
           const level = Math.floor((user.exp || 0) / 1000) + 1; // simple calculation

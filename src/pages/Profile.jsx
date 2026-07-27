@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Flame, Pickaxe, Award, CheckCircle } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { Flame, Pickaxe, Award, CheckCircle, LogOut } from 'lucide-react';
 import { supabase } from '../utils/supabase';
 
-export default function Dashboard() {
+export default function Profile() {
+  const navigate = useNavigate();
   const [profile, setProfile] = useState(null);
   const [userBadges, setUserBadges] = useState([]);
   const [runHistory, setRunHistory] = useState([]);
@@ -48,9 +50,19 @@ export default function Dashboard() {
   const currentExp = profile.exp || 0;
   const progressPercent = Math.min((currentExp / expToNextLevel) * 100, 100);
 
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    navigate('/');
+  };
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '3rem' }}>
-      <h2 style={{ fontSize: '3rem', margin: 0, textTransform: 'uppercase' }}>Contributor Dashboard</h2>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <h2 style={{ fontSize: '3rem', margin: 0, textTransform: 'uppercase' }}>Contributor Profile</h2>
+        <button onClick={handleLogout} className="brutal-btn speed-streak-hover" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', backgroundColor: '#ff0055', color: '#fff', fontSize: '1.2rem' }}>
+          <LogOut size={24} /> Logout
+        </button>
+      </div>
       
       {/* Top Stats Grid */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 300px), 1fr))', gap: '2rem' }}>
